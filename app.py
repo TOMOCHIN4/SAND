@@ -20,6 +20,7 @@ from typing import List, Tuple
 import gradio as gr
 from google import genai
 from google.genai import types
+from app_config import PODCAST_STYLES, DEFAULT_STYLE
 
 # ---------------------------------------------------------------------------
 # 1) API キー  ―  HF Space では Settings → Secrets に GOOGLE_API_KEY を登録
@@ -48,7 +49,7 @@ SAMPLE_RATE   = 24_000                               # 公式推奨: 24 kHz / 16
 VOICE_OPTIONS = [
     # 公式 30+ から抜粋（教育向け優先）
     "Gacrux", "Leda", "Autonoe", "Callirrhoe", "Kore",
-    "Zephyr", "Puck", "Umbriel", "Fenrir", "Enceladus",
+    "Zephyr", "Puck", "Umbriel", "Fenrir", "Enceladus", "Charon",
 ]
 
 # ---------------------------------------------------------------------------
@@ -67,28 +68,71 @@ def pcm_to_wav_bytes(pcm: bytes) -> bytes:
 # ---------------------------------------------------------------------------
 # 4) 台本生成
 # ---------------------------------------------------------------------------
-SCRIPT_TEMPLATE = """\
-あなたは熟練のポッドキャスト脚本家です。
-以下の制約に**厳密**に従い、日本語の台本を作成してください。
+SCRIPT_TEMPLATES = {
+    "テンポのいい漫才風": """\
+あなたは関西の漫才師の脚本家です。
+以下の制約に**厳密**に従い、テンポのいい関西弁の漫才台本を作成してください。
 ---
-* 話者は 2 名: {spk1} と {spk2}
+* 話者は 2 名: {spk1}（ツッコミ役） と {spk2}（ボケ役）
 * 各行は「<話者名>: <セリフ>」形式
-* 行頭の話者名は必ず {spk1} または {spk2}
-* 構成: 冒頭あいさつ → 本編 → まとめ
+* 関西弁で話す（「やんか」「せやろ」「なんでやねん」等を使用）
+* テンポよく、ボケとツッコミの掛け合い
 * 長さ: 約 {minutes} 分
-* トーン: {style}
 ---
 テーマ: {topic}
-台本を開始してください。
+漫才台本を開始してください。
+""",
+    "ニュース実況中継風": """\
+あなたは熟練のニュースキャスター向け脚本家です。
+以下の制約に**厳密**に従い、ニュース番組風の台本を作成してください。
+---
+* 話者は 2 名: {spk1}（メインキャスター） と {spk2}（サブキャスター・解説者）
+* 各行は「<話者名>: <セリフ>」形式
+* 丁寧語で、情報を分かりやすく伝える
+* 実況中継のようなライブ感
+* 長さ: 約 {minutes} 分
+---
+テーマ: {topic}
+ニュース台本を開始してください。
+""",
+    "授業風": """\
+あなたは教育番組の脚本家です。
+以下の制約に**厳密**に従い、先生と生徒の授業風台本を作成してください。
+---
+* 話者は 2 名: {spk1}（先生） と {spk2}（生徒）
+* 各行は「<話者名>: <セリフ>」形式
+* 教育的で分かりやすい説明
+* 生徒の質問と先生の丁寧な回答
+* 長さ: 約 {minutes} 分
+---
+テーマ: {topic}
+授業台本を開始してください。
+""",
+    "お笑い芸人のラジオ風": """\
+あなたは深夜ラジオの構成作家です。
+以下の制約に**厳密**に従い、お笑い芸人のラジオトーク台本を作成してください。
+---
+* 話者は 2 名: {spk1}（くせのあるおっさん） と {spk2}（天然ボケなかわいいおばさん）
+* 各行は「<話者名>: <セリフ>」形式
+* {spk1}は少しくせがあって毒舌だが憎めないキャラ
+* {spk2}は天然で時々的外れだが愛らしいキャラ
+* カジュアルで親しみやすい深夜ラジオのトーク
+* 軽妙なやり取りと笑いを誘う会話
+* 長さ: 約 {minutes} 分
+---
+テーマ: {topic}
+ラジオトーク台本を開始してください。
 """
+}
 
 def make_script(topic: str,
                 minutes: int,
                 style: str,
                 spk1: str,
                 spk2: str) -> str:
-    prompt = SCRIPT_TEMPLATE.format(
-        topic=topic, minutes=minutes, style=style, spk1=spk1, spk2=spk2
+    template = SCRIPT_TEMPLATES.get(style, SCRIPT_TEMPLATES["授業風"])
+    prompt = template.format(
+        topic=topic, minutes=minutes, spk1=spk1, spk2=spk2
     )
     resp = client.models.generate_content(
         model=TEXT_MODEL_ID,
@@ -173,19 +217,35 @@ with gr.Blocks(title="Gemini マルチスピーカー Podcast Generator") as dem
 
     topic_in   = gr.Textbox(label="テーマ", placeholder="例: 生成 AI の未来動向")
     minutes_in = gr.Slider(1, 30, value=5, step=1, label="長さ (分)")
-    style_in   = gr.Dropdown(["ニュース解説", "対談風", "ストーリーテリング"],
-                             value="対談風", label="スタイル")
+    style_in   = gr.Dropdown(list(PODCAST_STYLES.keys()),
+                             value=DEFAULT_STYLE, label="スタイル")
 
     with gr.Row():
-        spk1_name_in  = gr.Textbox(label="話者 1 名", value="ゆうこママ")
-        spk1_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Gacrux", label="話者 1 ボイス")
+        spk1_name_in  = gr.Textbox(label="話者 1 名", value=PODCAST_STYLES[DEFAULT_STYLE]["speaker1_name"])
+        spk1_voice_in = gr.Dropdown(VOICE_OPTIONS, value=PODCAST_STYLES[DEFAULT_STYLE]["speaker1_voice"], label="話者 1 ボイス")
     with gr.Row():
-        spk2_name_in  = gr.Textbox(label="話者 2 名", value="あおたろちゃん")
-        spk2_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Leda", label="話者 2 ボイス")
+        spk2_name_in  = gr.Textbox(label="話者 2 名", value=PODCAST_STYLES[DEFAULT_STYLE]["speaker2_name"])
+        spk2_voice_in = gr.Dropdown(VOICE_OPTIONS, value=PODCAST_STYLES[DEFAULT_STYLE]["speaker2_voice"], label="話者 2 ボイス")
 
     gen_btn     = gr.Button("生成")
     script_out  = gr.Textbox(lines=22, label="生成された台本", show_copy_button=True)
     audio_out   = gr.Audio(label="Podcast (WAV)", type="filepath")   # ← filepath
+
+    def update_speakers(style):
+        """スタイル選択時にスピーカー設定を自動更新"""
+        config = PODCAST_STYLES.get(style, PODCAST_STYLES[DEFAULT_STYLE])
+        return (
+            config["speaker1_name"],
+            config["speaker1_voice"], 
+            config["speaker2_name"],
+            config["speaker2_voice"]
+        )
+    
+    style_in.change(
+        fn=update_speakers,
+        inputs=[style_in],
+        outputs=[spk1_name_in, spk1_voice_in, spk2_name_in, spk2_voice_in]
+    )
 
     gen_btn.click(
         fn=generate_podcast,

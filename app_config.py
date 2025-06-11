@@ -48,12 +48,40 @@ ALL_VOICES = [
 ]
 
 # スタイル設定
-EDUCATIONAL_STYLES = ["対話形式", "解説形式", "クイズ形式", "物語形式"]
-COMEDY_STYLES = ["漫才", "コント", "大喜利", "フリートーク"]
+PODCAST_STYLES = {
+    "テンポのいい漫才風": {
+        "speaker1_name": "たけし",
+        "speaker2_name": "さとし", 
+        "speaker1_voice": "Fenrir",    # 力強い男性（ツッコミ）
+        "speaker2_voice": "Umbriel",   # 落ち着いた男性（ボケ）
+        "description": "関西弁でテンポよく進む漫才スタイル"
+    },
+    "ニュース実況中継風": {
+        "speaker1_name": "ゆうこママ",
+        "speaker2_name": "あおたろちゃん",
+        "speaker1_voice": "Gacrux",    # 落ち着いた大人の女性
+        "speaker2_voice": "Leda",      # 明るい子どもの声
+        "description": "ニュースキャスター風の実況解説"
+    },
+    "授業風": {
+        "speaker1_name": "ゆうこママ",
+        "speaker2_name": "あおたろちゃん", 
+        "speaker1_voice": "Gacrux",    # 落ち着いた大人の女性
+        "speaker2_voice": "Leda",      # 明るい子どもの声
+        "description": "先生と生徒の教室での授業スタイル"
+    },
+    "お笑い芸人のラジオ風": {
+        "speaker1_name": "ともひろ",
+        "speaker2_name": "ゆうこ",
+        "speaker1_voice": "Charon",    # 低音でくせのあるおっさん
+        "speaker2_voice": "Callirrhoe", # 天然ボケなかわいいおばさん
+        "description": "深夜ラジオのフリートーク風"
+    }
+}
 
 # デフォルト設定
 DEFAULT_DURATION = 5  # 分
-DEFAULT_STYLE = "対話形式"
+DEFAULT_STYLE = "授業風"
 DEFAULT_TEACHER_NAME = "ゆうこママ"
 DEFAULT_STUDENT_NAME = "あおたろちゃん"
 DEFAULT_TEACHER_VOICE = "Gacrux"  # 落ち着いた大人の女性
