@@ -76,6 +76,20 @@ PODCAST_STYLES = {
         "speaker1_voice": "Charon",    # 低音でくせのあるおっさん
         "speaker2_voice": "Callirrhoe", # 天然ボケなかわいいおばさん
         "description": "深夜ラジオのフリートーク風"
+    },
+    "クイズ番組風": {
+        "speaker1_name": "ゆうこママ",
+        "speaker2_name": "あおたろちゃん",
+        "speaker1_voice": "Gacrux",    # 明るい司会者
+        "speaker2_voice": "Leda",      # 元気な解答者
+        "description": "楽しく学べる教育クイズ番組"
+    },
+    "探検隊レポート風": {
+        "speaker1_name": "たけし隊長",
+        "speaker2_name": "あおたろ隊員", 
+        "speaker1_voice": "Fenrir",    # 力強い探検隊長
+        "speaker2_voice": "Leda",      # 好奇心旺盛な隊員
+        "description": "ワクワクドキドキの探検レポート"
     }
 }
 

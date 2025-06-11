@@ -130,14 +130,47 @@ SCRIPT_TEMPLATES = {
 ---
 テーマ: {topic}
 ラジオトーク台本を開始してください。
+""",
+    "クイズ番組風": """\
+あなたは小学生向け教育クイズ番組の脚本家です。
+以下の制約に**厳密**に従い、小学生が楽しく学べるクイズ番組台本を作成してください。
+---
+* 話者は 2 名: {spk1}（司会者） と {spk2}（解答者）
+* 各行は「<話者名>: <セリフ>」形式
+* {spk1}は明るく盛り上げる司会進行
+* {spk2}は時々間違えたり、面白い答えを出したりする
+* 効果音的な表現（「ピンポーン！」「ブッブー」など）を使う
+* 1問ごとに豆知識や関連する面白い情報を提供
+* 小学生が理解できる簡単な言葉を使う
+* 長さ: 約 {minutes} 分
+---
+テーマ: {topic}
+クイズ番組台本を開始してください。
+""",
+    "探検隊レポート風": """\
+あなたは小学生向け探検番組の脚本家です。
+以下の制約に**厳密**に従い、小学生がワクワクしながら学べる探検レポート台本を作成してください。
+---
+* 話者は 2 名: {spk1}（探検隊長） と {spk2}（隊員）
+* 各行は「<話者名>: <セリフ>」形式
+* 冒険的で発見に満ちた雰囲気を演出
+* 「うわー！」「見てください！」などの感動表現を多用
+* 身の回りの不思議を探検する設定
+* 発見したことを分かりやすく解説
+* 小学生が理解できる簡単な言葉と擬音を使う
+* 長さ: 約 {minutes} 分
+---
+テーマ: {topic}
+探検レポート台本を開始してください。
 """
 }
 
 def make_script(topic: str,
-                minutes: int,
+                seconds: int,
                 style: str,
                 spk1: str,
                 spk2: str) -> str:
+    minutes = seconds / 60  # 秒を分に変換
     template = SCRIPT_TEMPLATES.get(style, SCRIPT_TEMPLATES["授業風"])
     prompt = template.format(
         topic=topic, minutes=minutes, spk1=spk1, spk2=spk2
@@ -165,7 +198,7 @@ def sanitize_script(script: str, spk1: str, spk2: str) -> str:
 # 6) ポッドキャスト生成  –  戻り値は (script, filepath)
 # ---------------------------------------------------------------------------
 def generate_podcast(topic: str,
-                     minutes: int,
+                     seconds: int,
                      style: str,
                      spk1_name: str,
                      spk1_voice: str,
@@ -173,7 +206,7 @@ def generate_podcast(topic: str,
                      spk2_voice: str) -> Tuple[str, str]:
 
     # 6-1  台本
-    raw_script = make_script(topic, minutes, style, spk1_name, spk2_name)
+    raw_script = make_script(topic, seconds, style, spk1_name, spk2_name)
     script = sanitize_script(raw_script, spk1_name, spk2_name)
 
     # 6-2  マルチスピーカー TTS
@@ -224,7 +257,7 @@ with gr.Blocks(title="Gemini マルチスピーカー Podcast Generator") as dem
     gr.Markdown("## 🎙️ Gemini 2.5 Pro + TTS で 2 人対話ポッドキャストを自動生成")
 
     topic_in   = gr.Textbox(label="テーマ", placeholder="例: 生成 AI の未来動向")
-    minutes_in = gr.Slider(1, 30, value=5, step=1, label="長さ (分)")
+    seconds_in = gr.Slider(30, 300, value=180, step=30, label="長さ (秒)")
     style_in   = gr.Dropdown(list(PODCAST_STYLES.keys()),
                              value=DEFAULT_STYLE, label="スタイル")
 
@@ -257,7 +290,7 @@ with gr.Blocks(title="Gemini マルチスピーカー Podcast Generator") as dem
 
     gen_btn.click(
         fn=generate_podcast,
-        inputs=[topic_in, minutes_in, style_in,
+        inputs=[topic_in, seconds_in, style_in,
                 spk1_name_in, spk1_voice_in,
                 spk2_name_in, spk2_voice_in],
         outputs=[script_out, audio_out],
