@@ -8,15 +8,23 @@ env/
 venv/
 ENV/
 .venv
+*.egg-info/
+dist/
+build/
 
 # API Keys and Secrets
 *.txt
 .env
 gemini_api_key.txt
+!requirements.txt
+!**/requirements.txt
 
-# Audio files
+# Audio files (大量生成されるため)
 *.wav
 *.mp3
+# テンプレートやサンプルは除外
+!samples/*.wav
+!samples/*.mp3
 
 # Jupyter
 *.ipynb_checkpoints
@@ -25,19 +33,30 @@ gemini_api_key.txt
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # Gradio
 flagged/
 gradio_cached_examples/
+gradio_queue.db
 
 # Temporary files
 *.tmp
 *.temp
 tmp/
 temp/
+
+# 開発用ディレクトリ（ローカルテスト用）
+sandbox/
+test_outputs/
+
+# 大きな教材ファイル（必要に応じて）
+# 教材資料/**/*.pdf
+# 教材資料/**/*.docx

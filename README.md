@@ -9,20 +9,13 @@
 - **マルチスピーカー対話**: Google Gemini TTSを使用した自然な会話音声
 - **Gradio Webアプリ**: Hugging Face Spacesでの簡単なデプロイ
 
-## 🚀 Hugging Face Spacesでの使用
+## 🚀 クイックスタート
 
-### デプロイ方法
+### Hugging Face Spacesで使用
 
-1. [Hugging Face](https://huggingface.co/)でアカウントを作成
-2. 新しいSpaceを作成（SDK: Gradio）
-3. このリポジトリのコードをアップロード
-4. Settings → Repository secretsで`GOOGLE_API_KEY`を設定
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/YOUR_USERNAME/SAND)
 
-### 必要な環境変数
-
-- `GOOGLE_API_KEY`: [Google AI Studio](https://aistudio.google.com/)から取得
-
-## 💻 ローカル開発
+### ローカル開発
 
 ```bash
 # リポジトリのクローン
@@ -34,35 +27,88 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # 依存関係のインストール
-pip install -r ベースとなるコード/requirements.txt
+pip install -r requirements.txt
 
 # 環境変数の設定
 echo "GOOGLE_API_KEY=your_api_key_here" > .env
 
 # アプリの起動
-python ベースとなるコード/app.py
+python app.py
 ```
 
 ## 📁 プロジェクト構造
 
 ```
 SAND/
-├── ベースとなるコード/      # Gradioアプリケーション
-│   ├── app.py              # メインアプリ
-│   ├── requirements.txt    # 依存関係
-│   └── README.md          # HF Spaces用README
-├── 教材資料/               # 学習教材（マークダウン形式）
-├── 自作ポッドキャスト/      # 音声生成スクリプト群
-└── CLAUDE.md              # 開発ガイドライン
+├── app.py                 # メインアプリケーション
+├── app_config.py          # 設定ファイル
+├── requirements.txt       # 依存関係
+├── README.md             # このファイル
+├── CHANGELOG.md          # 変更履歴
+├── 教材資料/              # 学習教材（マークダウン形式）
+│   ├── 全般/             # 汎用教材
+│   ├── 理科/             # 理科専用
+│   └── 社会/             # 社会専用
+└── 自作ポッドキャスト/     # 音声生成スクリプト群
+    ├── 共通リソース/      # APIキー、ドキュメント
+    ├── サンドウィッチマン風/ # コメディコンテンツ
+    ├── 理科/             # 理科ポッドキャスト
+    ├── 社会/             # 社会ポッドキャスト
+    ├── 算数/             # 算数ポッドキャスト
+    └── 国語/             # 国語ポッドキャスト
 ```
 
-## 🛠️ 技術スタック
+## 🛠️ 開発
 
-- **Frontend**: Gradio 5.33.0
-- **AI Models**: Google Gemini 2.5 Pro (Text & TTS)
-- **Audio**: WAV形式（24kHz, 16-bit, Mono）
-- **Deployment**: Hugging Face Spaces
+### ブランチ戦略
+
+- `main`: 本番環境（Hugging Face Spacesに自動デプロイ）
+- `develop`: 開発ブランチ
+- `feature/*`: 機能開発用ブランチ
+
+### 環境変数
+
+| 変数名 | 説明 | 必須 |
+|--------|------|------|
+| `GOOGLE_API_KEY` | Google AI StudioのAPIキー | ✅ |
+| `HF_TOKEN` | Hugging Face Token（自動デプロイ用） | ⚪ |
+
+### APIキーの取得
+
+1. [Google AI Studio](https://aistudio.google.com/)にアクセス
+2. 「Get API key」をクリック
+3. 新しいAPIキーを作成
+
+## 🎨 カスタマイズ
+
+### 音声の追加
+
+`app_config.py`の`ALL_VOICES`リストに新しい音声を追加：
+
+```python
+ALL_VOICES = [
+    # 既存の音声...
+    "新しい音声名",
+]
+```
+
+### スタイルの追加
+
+`app_config.py`でスタイルをカスタマイズ：
+
+```python
+EDUCATIONAL_STYLES = ["対話形式", "解説形式", "新しいスタイル"]
+```
 
 ## 📝 ライセンス
 
 MIT License
+
+## 🤝 貢献
+
+プルリクエスト歓迎です！大きな変更の場合は、まずissueを作成して変更内容を議論してください。
+
+## 📞 サポート
+
+- Issues: [GitHub Issues](https://github.com/TOMOCHIN4/SAND/issues)
+- Discussions: [GitHub Discussions](https://github.com/TOMOCHIN4/SAND/discussions)
