@@ -9,7 +9,7 @@ import subprocess
 import shutil
 from pathlib import Path
 
-def deploy_to_huggingface(space_name="SAND", username=None, token=None):
+def deploy_to_huggingface(space_name="SAND", username="tomo2chin2", token=None):
     """
     Hugging Face Spacesにアプリをデプロイ
     
@@ -87,6 +87,7 @@ Settings → Repository secretsに以下を設定してください：
         
         # Git操作
         subprocess.run(["git", "init"], check=True)
+        subprocess.run(["git", "checkout", "-b", "main"], check=True)
         subprocess.run(["git", "add", "."], check=True)
         subprocess.run(["git", "commit", "-m", "Deploy to Hugging Face Spaces"], check=True)
         subprocess.run(["git", "remote", "add", "origin", repo_url], check=True)
@@ -102,4 +103,8 @@ Settings → Repository secretsに以下を設定してください：
 
 if __name__ == "__main__":
     # Claude Codeが実行時に適切な認証情報を設定します
-    deploy_to_huggingface()
+    import sys
+    token = None
+    if len(sys.argv) > 1:
+        token = sys.argv[1]
+    deploy_to_huggingface(token=token)

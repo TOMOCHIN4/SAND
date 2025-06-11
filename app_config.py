@@ -20,11 +20,11 @@ SAMPLE_WIDTH = 2      # 16-bit
 
 # 利用可能な音声リスト（教育用に最適化）
 EDUCATIONAL_VOICES = [
-    "Autonoe",    # 先生役に最適（落ち着いた女性）
-    "Callirrhoe", # 子供役に最適（明るい声）
-    "Leda",       # 子供役の代替
+    "Gacrux",     # 先生役に最適（落ち着いた大人の女性）
+    "Leda",       # 子供役に最適（明るい子どもの声）
+    "Autonoe",    # 先生役の代替
+    "Callirrhoe", # 子供役の代替
     "Kore",       # ナレーター向き
-    "Puck",       # 男性的な声
 ]
 
 # コメディ用音声リスト
@@ -44,6 +44,7 @@ ALL_VOICES = [
     "Elara", "Hermione", "Himalia", "Ida", "Io",
     "Larissa", "Lyra", "Metis", "Mira", "Naiad",
     "Oberon", "Ophelia", "Pandora", "Proteus", "Setebos",
+    "Gacrux",  # 追加：落ち着いた大人の女性
 ]
 
 # スタイル設定
@@ -53,5 +54,7 @@ COMEDY_STYLES = ["漫才", "コント", "大喜利", "フリートーク"]
 # デフォルト設定
 DEFAULT_DURATION = 5  # 分
 DEFAULT_STYLE = "対話形式"
-DEFAULT_TEACHER_NAME = "ゆうこ先生"
-DEFAULT_STUDENT_NAME = "あおいちゃん"
+DEFAULT_TEACHER_NAME = "ゆうこママ"
+DEFAULT_STUDENT_NAME = "あおたろちゃん"
+DEFAULT_TEACHER_VOICE = "Gacrux"  # 落ち着いた大人の女性
+DEFAULT_STUDENT_VOICE = "Leda"    # 明るい子どもの声

@@ -46,9 +46,9 @@ TTS_MODEL_ID  = "gemini-2.5-pro-preview-tts"
 SAMPLE_RATE   = 24_000                               # 公式推奨: 24 kHz / 16-bit / Mono
 
 VOICE_OPTIONS = [
-    # 公式 30 から抜粋
-    "Zephyr", "Puck", "Kore", "Umbriel", "Fenrir",
-    "Enceladus", "Charon", "Iapetus", "Leda", "Sadachbia",
+    # 公式 30+ から抜粋（教育向け優先）
+    "Gacrux", "Leda", "Autonoe", "Callirrhoe", "Kore",
+    "Zephyr", "Puck", "Umbriel", "Fenrir", "Enceladus",
 ]
 
 # ---------------------------------------------------------------------------
@@ -177,11 +177,11 @@ with gr.Blocks(title="Gemini マルチスピーカー Podcast Generator") as dem
                              value="対談風", label="スタイル")
 
     with gr.Row():
-        spk1_name_in  = gr.Textbox(label="話者 1 名", value="ホスト")
-        spk1_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Kore", label="話者 1 ボイス")
+        spk1_name_in  = gr.Textbox(label="話者 1 名", value="ゆうこママ")
+        spk1_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Gacrux", label="話者 1 ボイス")
     with gr.Row():
-        spk2_name_in  = gr.Textbox(label="話者 2 名", value="ゲスト")
-        spk2_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Puck", label="話者 2 ボイス")
+        spk2_name_in  = gr.Textbox(label="話者 2 名", value="あおたろちゃん")
+        spk2_voice_in = gr.Dropdown(VOICE_OPTIONS, value="Leda", label="話者 2 ボイス")
 
     gen_btn     = gr.Button("生成")
     script_out  = gr.Textbox(lines=22, label="生成された台本", show_copy_button=True)
