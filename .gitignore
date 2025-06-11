@@ -56,6 +56,10 @@ temp/
 # 開発用ディレクトリ（ローカルテスト用）
 sandbox/
 test_outputs/
+hf_deploy_temp/
+
+# デプロイスクリプトの環境変数
+.hf_credentials
 
 # 大きな教材ファイル（必要に応じて）
 # 教材資料/**/*.pdf

@@ -62,7 +62,7 @@ SAND/
 
 ### ブランチ戦略
 
-- `main`: 本番環境（Hugging Face Spacesに自動デプロイ）
+- `main`: 本番環境
 - `develop`: 開発ブランチ
 - `feature/*`: 機能開発用ブランチ
 
@@ -71,7 +71,6 @@ SAND/
 | 変数名 | 説明 | 必須 |
 |--------|------|------|
 | `GOOGLE_API_KEY` | Google AI StudioのAPIキー | ✅ |
-| `HF_TOKEN` | Hugging Face Token（自動デプロイ用） | ⚪ |
 
 ### APIキーの取得
 
